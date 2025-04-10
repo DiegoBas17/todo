@@ -15,7 +15,7 @@ public class UserService {
         return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("Utente con questo username: " + username + " non trovato"));
     }
 
-    /*public User saveUser(UserRequest user) {
-
-    }*/
+    public User findById(Long id_user) {
+        return userRepository.findById(id_user).orElseThrow(() -> new NotFoundException("Utente con questo id: " + id_user + " non trovato."));
+    }
 }
