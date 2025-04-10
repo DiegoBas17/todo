@@ -30,6 +30,7 @@ public class Config {
         httpSecurity.sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.authorizeHttpRequests(http -> http
                 .requestMatchers("/auth/**").permitAll()
+                .requestMatchers("/auth/me").authenticated()
                 .anyRequest().authenticated()
         );
         httpSecurity.addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class);

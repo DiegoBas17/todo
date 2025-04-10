@@ -25,4 +25,10 @@ public class AuthService {
             throw new MyIllegalException("Credenziali errate!");
         }
     }
+
+    public User getUserFromToken(String token) {
+        jwtTools.verifyToken(token);
+        String userId = jwtTools.extractIdFromToken(token);
+        return userService.findById(Long.valueOf(userId));
+    }
 }

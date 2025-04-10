@@ -42,4 +42,14 @@ public class AuthController {
             return new NewEntityRespDTO(this.userService.saveUser(body).getId());
         }
     }
+
+    @GetMapping("/me")
+    public User getCurrentUser(@RequestHeader("Authorization") String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            throw new MyEntityNotFoundException("Token mancante o non valido");
+        }
+        String token = authorizationHeader.substring(7);
+        User currentUser = authService.getUserFromToken(token);
+        return currentUser;
+    }
 }
