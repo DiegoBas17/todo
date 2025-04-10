@@ -25,7 +25,7 @@ public class JWTTools {
 
     public void verifyToken(String token) {
         try {
-            Jwts.parser().setSigningKey(Keys.hmacShaKeyFor(secret.getBytes())).parseClaimsJws(token); // Verifica la validità del token
+            Jwts.parser().setSigningKey(Keys.hmacShaKeyFor(secret.getBytes())).parseClaimsJws(token);
         } catch (Exception ex) {
             throw new MyIllegalException("Problemi col token! Per favore effettua di nuovo il login!");
         }

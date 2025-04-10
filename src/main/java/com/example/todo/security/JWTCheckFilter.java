@@ -27,23 +27,31 @@ public class JWTCheckFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
-        if (authHeader == null || !authHeader.startsWith("Bearer "))
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("Token non trovato o non in formato corretto");
             throw new MyEntityNotFoundException("Per favore inserisci correttamente il token nell'Authorization Header");
-
+        }
         String accessToken = authHeader.substring(7);
-        jwtTools.verifyToken(accessToken); // Verifica il token
-
-        String id = jwtTools.extractIdFromToken(accessToken);
-        User currentUser = userService.findById(Long.valueOf(id));
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
+        try {
+            jwtTools.verifyToken(accessToken);
+            String id = jwtTools.extractIdFromToken(accessToken);
+            User currentUser = userService.findById(Long.valueOf(id));
+            Authentication authentication = new UsernamePasswordAuthenticationToken(currentUser, null, currentUser.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new MyEntityNotFoundException("Problemi con il token! Effettua il login di nuovo.");
+        }
         filterChain.doFilter(request, response);
     }
 
+
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return new AntPathMatcher().match("/api/auth/**", request.getServletPath()); // Non applicare il filtro sulle rotte /api/auth/**
+        boolean shouldNot = new AntPathMatcher().match("/auth/**", request.getServletPath());
+        if (shouldNot) {
+            System.out.println("Filtro non applicato per la route: " + request.getServletPath());
+        }
+        return shouldNot;
     }
 }
