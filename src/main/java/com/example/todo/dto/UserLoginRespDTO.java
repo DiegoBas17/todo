@@ -1,4 +1,4 @@
 package com.example.todo.dto;
 
-public record UserLoginRespDTO(String accessToken) {
+public record UserLoginRespDTO(String accessToken, String username) {
 }

@@ -27,7 +27,7 @@ public class AuthController {
     @PostMapping("/login")
     public UserLoginRespDTO login(@RequestBody @Validated UserDTO payload) {
         User user = userService.findByUsername(payload.username());
-        return new UserLoginRespDTO(this.authService.checkCredentialsAndGenerateToken(payload));
+        return new UserLoginRespDTO(this.authService.checkCredentialsAndGenerateToken(payload), payload.username());
     }
 
     @PostMapping("/register")
